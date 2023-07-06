@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 @Mod(HandheldUtilities.MOD_ID)
 public class HandheldUtilities
 {
-    public static final String MOD_ID = "handheld_utilities";
+    public static final String MOD_ID = "craftminerd_handheld_utilities";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 

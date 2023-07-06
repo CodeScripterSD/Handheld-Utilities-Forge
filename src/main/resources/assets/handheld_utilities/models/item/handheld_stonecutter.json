@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "handheld_utilities:item/handheld_stonecutter"
+    "layer0": "craftminerd_handheld_utilities:item/handheld_stonecutter"
   }
 }
