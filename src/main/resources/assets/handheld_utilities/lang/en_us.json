@@ -1,0 +1,16 @@
+{
+  "itemGroup.handheld_utilities": "Handheld Utilities",
+
+  "item.handheld_utilities.handheld_crafter": "Handheld Crafting Table",
+  "item.handheld_utilities.handheld_smithing": "Handheld Smithing Table",
+  "item.handheld_utilities.handheld_stonecutter": "Handheld Stonecutter",
+  "item.handheld_utilities.handheld_loom": "Handheld Loom",
+  "item.handheld_utilities.handheld_chest": "Handheld Chest",
+  "item.handheld_utilities.handheld_grindstone": "Handheld Grindstone",
+  "item.handheld_utilities.handheld_etable": "Handheld Enchanting Table",
+  "item.handheld_utilities.handheld_echest": "Handheld Ender Chest",
+  "item.handheld_utilities.handheld_anvil": "Handheld Anvil",
+  "item.handheld_utilities.handheld_chipped_anvil": "Handheld Chipped Anvil",
+  "item.handheld_utilities.handheld_damaged_anvil": "Handheld Damaged Anvil"
+
+}

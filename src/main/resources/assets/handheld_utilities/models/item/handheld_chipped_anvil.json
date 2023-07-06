@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "handheld_utilities:item/handheld_chipped_anvil"
+  },
+  "overrides": [
+    { "predicate":  { "damaged": 1, "damage": 0.5 }, "model": "handheld_utilities:item/handheld_damaged_anvil"}
+  ]
+}
