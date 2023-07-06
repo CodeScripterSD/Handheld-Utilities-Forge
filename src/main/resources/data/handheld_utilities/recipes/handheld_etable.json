@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:enchanting_table"
+    }
+  ],
+  "result": {
+    "item": "handheld_utilities:handheld_etable"
+  }
+}
