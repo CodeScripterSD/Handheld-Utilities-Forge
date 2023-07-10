@@ -21,7 +21,7 @@ public class JEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ModItems.HANDHELD_SMITHING.get().getDefaultInstance(), RecipeTypes.SMITHING);
         registration.addRecipeCatalyst(ModItems.HANDHELD_STONECUTTER.get().getDefaultInstance(), RecipeTypes.STONECUTTING);
         registration.addRecipeCatalyst(ModItems.HANDHELD_ANVIL.get().getDefaultInstance(), RecipeTypes.ANVIL);
-
+        registration.addRecipeCatalyst(ModItems.HANDHELD_FURNACE.get().getDefaultInstance(), RecipeTypes.SMELTING);
 //        IModPlugin.super.registerRecipeCatalysts(registration);
     }
 }
