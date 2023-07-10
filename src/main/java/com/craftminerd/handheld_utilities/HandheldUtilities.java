@@ -1,5 +1,6 @@
 package com.craftminerd.handheld_utilities;
 
+import com.craftminerd.handheld_utilities.config.ModCommonConfigs;
 import com.craftminerd.handheld_utilities.item.ModItems;
 import com.craftminerd.handheld_utilities.menu.ModMenuTypes;
 import com.mojang.logging.LogUtils;
@@ -37,6 +38,8 @@ public class HandheldUtilities
 
         ModMenuTypes.MENUS.register(eventBus);
         ModItems.ITEMS.register(eventBus);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, "handheld_utilities-common.toml");
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

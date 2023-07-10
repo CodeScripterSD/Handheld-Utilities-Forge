@@ -32,4 +32,7 @@ public class ModItems {
             .tab(HandheldUtilities.UTILITIES_TAB).stacksTo(1).defaultDurability(2)));
     public static final RegistryObject<Item> HANDHELD_DAMAGED_ANVIL = ITEMS.register("handheld_damaged_anvil", () -> new HandheldAnvil(new Item.Properties()
             .tab(HandheldUtilities.UTILITIES_TAB).stacksTo(1).defaultDurability(1)));
+
+    public static final RegistryObject<Item> HANDHELD_FURNACE = ITEMS.register("handheld_furnace", () -> new HandheldFurnace(new Item.Properties()
+            .tab(HandheldUtilities.UTILITIES_TAB)));
 }

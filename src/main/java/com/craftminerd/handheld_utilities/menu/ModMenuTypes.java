@@ -15,4 +15,7 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<HandheldAnvilMenu>> HANDHELD_ANVIL = MENUS.register("handheld_anvil",
             () -> IForgeMenuType.create(HandheldAnvilMenu::new));
+
+    public static final RegistryObject<MenuType<HandheldFurnaceMenu>> HANDHELD_FURNACE = MENUS.register("handheld_furnace",
+            () -> IForgeMenuType.create(HandheldFurnaceMenu::new));
 }

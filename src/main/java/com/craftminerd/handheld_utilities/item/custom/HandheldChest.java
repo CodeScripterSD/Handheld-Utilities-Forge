@@ -39,8 +39,7 @@ public class HandheldChest extends HandheldStorageItem {
     }
 
     public static HandheldChestData getData(ItemStack stack) {
-        if (!(stack.getItem() instanceof HandheldChest))
-            return null;
+
         UUID uuid;
         CompoundTag tag = stack.getOrCreateTag();
         if (!tag.contains("UUID")) {
@@ -53,7 +52,8 @@ public class HandheldChest extends HandheldStorageItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide() && pPlayer.getItemInHand(pUsedHand).getItem() instanceof HandheldStorageItem) {
+
             ItemStack handheldchest = pPlayer.getItemInHand(pUsedHand);
             HandheldChestData data = HandheldChest.getData(handheldchest);
             pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.CHEST_OPEN, SoundSource.PLAYERS, (float) 0.5, 1);
