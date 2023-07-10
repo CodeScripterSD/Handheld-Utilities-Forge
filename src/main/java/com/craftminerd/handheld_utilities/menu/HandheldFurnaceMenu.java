@@ -1,6 +1,8 @@
 package com.craftminerd.handheld_utilities.menu;
 
 import com.craftminerd.handheld_utilities.item.ModItems;
+import com.craftminerd.handheld_utilities.item.custom.HandheldFurnace;
+import com.craftminerd.handheld_utilities.item.custom.HandheldStorageItem;
 import com.craftminerd.handheld_utilities.menu.slot.HandheldFurnaceFuelSlot;
 import com.craftminerd.handheld_utilities.menu.slot.HandheldFurnaceResultSlot;
 import com.craftminerd.handheld_utilities.menu.slot.HandheldFurnaceSlot;
@@ -8,10 +10,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -33,7 +33,6 @@ public class HandheldFurnaceMenu extends AbstractContainerMenu {
     private final ContainerData data;
     protected final Level level;
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
-    private int blocked = -1;
 
     public HandheldFurnaceMenu(int pContainerId, Inventory pPlayerInventory, FriendlyByteBuf buf) {
         this(pContainerId, pPlayerInventory, new ItemStackHandler(3), new SimpleContainerData(4));
@@ -152,6 +151,55 @@ public class HandheldFurnaceMenu extends AbstractContainerMenu {
 
     public boolean isFuel(ItemStack pStack) {
         return net.minecraftforge.common.ForgeHooks.getBurnTime(pStack, this.recipeType) > 0;
+    }
+
+    @Override
+    public void clicked(int pSlotId, int pButton, ClickType pClickType, Player pPlayer) {
+        if (pSlotId < 0 || pSlotId > slots.size()) {
+            super.clicked(pSlotId, pButton, pClickType, pPlayer);
+            return;
+        }
+
+        Slot slot = slots.get(pSlotId);
+        if (!canTake(pSlotId, slot, pButton, pPlayer, pClickType)) {
+            return;
+        }
+
+        super.clicked(pSlotId, pButton, pClickType, pPlayer);
+    }
+
+    private boolean canTake(int slotId, Slot slot, int button, Player player, ClickType clickType) {
+        if (slotId <= handler.getSlots() - 1 && isBlockedItem(this.getCarried())) {
+            return false;
+        }
+        if(!filtered(slotId, this.getCarried().getItem()))
+            return false;
+
+        // Hotbar swapping via number keys
+        if (clickType == ClickType.SWAP) {
+            int hotbarId = handler.getSlots() + 27 + button;
+            // Block swapping with container
+
+            Slot hotbarSlot = getSlot(hotbarId);
+            if (slotId <= handler.getSlots() - 1) {
+                return !isBlockedItem(slot.getItem()) && !isBlockedItem(hotbarSlot.getItem()) && filtered(slotId, hotbarSlot.getItem().getItem());
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isBlockedItem(ItemStack item) {
+        return item.getItem() instanceof HandheldFurnace || item.getItem() instanceof HandheldStorageItem;
+    }
+
+    //For filtering what items are allowed in the HandheldStorage
+    private boolean filtered(int slotId, Item item) {
+        if(slotId < handler.getSlots()) {
+            if(slotId < 3 && !(item instanceof Item))
+                return false;
+        }
+        return true;
     }
 
     public int getBurnProgress() {
