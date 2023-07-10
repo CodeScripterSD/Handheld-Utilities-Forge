@@ -8,8 +8,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -96,52 +98,52 @@ public class HandheldFurnaceMenu extends AbstractContainerMenu {
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack quickMoveStack(Player playerIn, int pIndex) {
-        // This method handles shift-clicking to transfer items quickly. This can easily crash the game if not coded
-        // correctly. The first slots (index 0 to whatever) are usually the inventory block/item, while player slots
-        // start after those.
-        Slot slot = this.getSlot(pIndex);
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(pIndex);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+            if (pIndex == 2) {
+                if (!this.moveItemStackTo(itemstack1, 3, 39, true)) {
+                    return ItemStack.EMPTY;
+                }
 
-        if (!slot.mayPickup(playerIn)) {
-            return slot.getItem();
-        }
-
-        if (pIndex == blocked || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        //Filtering what's allowed in the storage, see also far below at line 192
-        if(!(slot.getItem().getItem() instanceof Item)) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack stack = slot.getItem();
-        ItemStack newStack = stack.copy();
-        int containerSlots = handler.getSlots();
-        if (pIndex < containerSlots) {
-            if (!this.moveItemStackTo(stack, containerSlots, this.slots.size(), true)) {
+                slot.onQuickCraft(itemstack1, itemstack);
+            } else if (pIndex != 1 && pIndex != 0) {
+                if (this.canSmelt(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (this.isFuel(itemstack1)) {
+                    if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (pIndex >= 3 && pIndex < 30) {
+                    if (!this.moveItemStackTo(itemstack1, 30, 39, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (pIndex >= 30 && pIndex < 39 && !this.moveItemStackTo(itemstack1, 3, 30, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 3, 39, false)) {
                 return ItemStack.EMPTY;
             }
-            slot.setChanged();
 
-            //Filtering what's allowed in the storage, see also far below at line 192
-        } else if(stack.getItem() instanceof Item) {
-            if (!this.moveItemStackTo(stack, 0, 3, false)) {
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+
+            if (itemstack1.getCount() == itemstack.getCount()) {
                 return ItemStack.EMPTY;
             }
-        }
-        if (!this.moveItemStackTo(stack, 0, 3, false)) {
-            return ItemStack.EMPTY;
-        }
 
-
-        if (stack.isEmpty()) {
-            slot.set(ItemStack.EMPTY);
-        } else {
-            slot.setChanged();
+            slot.onTake(pPlayer, itemstack1);
         }
 
-        slot.onTake(playerIn, newStack);
-        return newStack;
+        return itemstack;
     }
 
     protected boolean canSmelt(ItemStack pStack) {
