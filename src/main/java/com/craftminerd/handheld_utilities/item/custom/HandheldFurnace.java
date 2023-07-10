@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import java.util.UUID;
 
 public class HandheldFurnace extends Item {
+    private static final Logger LOGGER = LogUtils.getLogger();
     public HandheldFurnace(Properties pProperties) {
         super(pProperties);
     }
@@ -62,14 +63,12 @@ public class HandheldFurnace extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (!pLevel.isClientSide() && pPlayer.getItemInHand(pUsedHand).getItem() instanceof HandheldFurnace) {
-            Component component = new TranslatableComponent("container.furnace");
-            if (!pPlayer.getItemInHand(pUsedHand).getDisplayName().equals(this.getDefaultInstance().getDisplayName())) {
-                component = pPlayer.getItemInHand(pUsedHand).getDisplayName();
-            }
             ItemStack handheld_furnace = pPlayer.getItemInHand(pUsedHand);
             HandheldFurnaceData data = HandheldFurnace.getData(handheld_furnace);
+
             NetworkHooks.openGui(((ServerPlayer) pPlayer), new SimpleMenuProvider( (windowId, playerInventory, playerEntity) ->
-                    new HandheldFurnaceMenu(windowId, playerInventory, data.getHandler(), data.getData()), component));
+                    new HandheldFurnaceMenu(windowId, playerInventory, data.getHandler(), data.getData()), handheld_furnace.getHoverName()));
+
             pPlayer.awardStat(Stats.INTERACT_WITH_FURNACE);
             return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
         }
@@ -88,6 +87,8 @@ public class HandheldFurnace extends Item {
 
         ItemStack itemstack = itemHandler.getStackInSlot(1);
         if (data.isLit() || (!itemstack.isEmpty() && !itemHandler.getStackInSlot(0).isEmpty())) {
+            data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.SMELTING, itemHandler));
+            HandheldFurnaceManager.get().setDirty();
             SimpleContainer inv = new SimpleContainer(3);
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 inv.setItem(i, itemHandler.getStackInSlot(i));
@@ -114,7 +115,7 @@ public class HandheldFurnace extends Item {
             if (data.isLit() && data.canBurn(recipe, itemHandler, i)) {
                 data.getStoredData().set(2, data.getStoredData().get(2)+1);
                 HandheldFurnaceManager.get().setDirty();
-                if (data.getStoredData().get(3) != 0 && data.getStoredData().get(2)-1 == data.getStoredData().get(3)) {
+                if (data.getStoredData().get(3) != 0 && data.getStoredData().get(2).equals(data.getStoredData().get(3))) {
                     data.getStoredData().set(2, 0);
                     data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.SMELTING, itemHandler));
                     HandheldFurnaceManager.get().setDirty();

@@ -31,7 +31,7 @@ public class HandheldFurnaceData {
     public final Metadata meta = new Metadata();
 
     public boolean isLit() {
-        return storedData.get(0) + 1 > 1;
+        return storedData.get(0) > 0;
     }
 
     public ContainerData getData() {
