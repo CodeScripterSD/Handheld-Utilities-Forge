@@ -1,0 +1,24 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "config_true": "Items.Handheld Blast Furnace recipe enabled",
+          "type": "handheld_utilities:config_true"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shapeless",
+        "ingredients": [
+          {
+            "item": "minecraft:blast_furnace"
+          }
+        ],
+        "result": {
+          "item": "handheld_utilities:handheld_blast_furnace"
+        }
+      }
+    }
+  ]
+}
