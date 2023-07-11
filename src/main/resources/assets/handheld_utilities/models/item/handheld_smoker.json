@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "handheld_utilities:item/handheld_furnace/handheld_smoker"
+  },
+  "overrides": [
+    {"predicate": {"lit": 1}, "model": "handheld_utilities:item/handheld_smoker_lit"}
+  ]
+}

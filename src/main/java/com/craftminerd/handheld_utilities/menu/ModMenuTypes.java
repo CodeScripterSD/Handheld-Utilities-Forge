@@ -18,4 +18,10 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<HandheldFurnaceMenu>> HANDHELD_FURNACE = MENUS.register("handheld_furnace",
             () -> IForgeMenuType.create(HandheldFurnaceMenu::new));
+
+    public static final RegistryObject<MenuType<HandheldBlastFurnaceMenu>> HANDHELD_BLAST_FURNACE = MENUS.register("handheld_blast_furnace",
+            () -> IForgeMenuType.create(HandheldBlastFurnaceMenu::new));
+
+    public static final RegistryObject<MenuType<HandheldSmokerMenu>> HANDHELD_SMOKER = MENUS.register("handheld_smoker",
+            () -> IForgeMenuType.create(HandheldSmokerMenu::new));
 }

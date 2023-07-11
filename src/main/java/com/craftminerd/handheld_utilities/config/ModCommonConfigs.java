@@ -16,6 +16,8 @@ public class ModCommonConfigs {
     public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_ECHEST_RECIPE;
     public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_ANVIL_RECIPES;
     public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_FURNACE_RECIPE;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_BLAST_FURNACE_RECIPE;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_SMOKER_RECIPE;
 
     static {
         BUILDER.push("Items");
@@ -30,6 +32,8 @@ public class ModCommonConfigs {
         ENABLE_HANDHELD_ECHEST_RECIPE = BUILDER.comment("Enable the recipe for Handheld Ender Chest").define("Handheld Ender Chest recipe enabled", true);
         ENABLE_HANDHELD_ANVIL_RECIPES = BUILDER.comment("Enable the recipe for Handheld Anvils").define("Handheld Anvil recipes enabled", true);
         ENABLE_HANDHELD_FURNACE_RECIPE = BUILDER.comment("Enable the recipe for Handheld Furnace").define("Handheld Furnace recipe enabled", true);
+        ENABLE_HANDHELD_BLAST_FURNACE_RECIPE = BUILDER.comment("Enable the recipe for Handheld Blast Furnace").define("Handheld Blast Furnace recipe enabled", true);
+        ENABLE_HANDHELD_SMOKER_RECIPE = BUILDER.comment("Enable the recipe for Handheld Smoker").define("Handheld Smoker recipe enabled", true);
 
         BUILDER.pop();
         SPEC = BUILDER.build();

@@ -35,4 +35,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> HANDHELD_FURNACE = ITEMS.register("handheld_furnace", () -> new HandheldFurnace(new Item.Properties()
             .tab(HandheldUtilities.UTILITIES_TAB)));
+    public static final RegistryObject<Item> HANDHELD_BLAST_FURNACE = ITEMS.register("handheld_blast_furnace", () -> new HandheldBlastFurnace(new Item.Properties()
+            .tab(HandheldUtilities.UTILITIES_TAB)));
+    public static final RegistryObject<Item> HANDHELD_SMOKER = ITEMS.register("handheld_smoker", () -> new HandheldSmoker(new Item.Properties()
+            .tab(HandheldUtilities.UTILITIES_TAB)));
+
 }

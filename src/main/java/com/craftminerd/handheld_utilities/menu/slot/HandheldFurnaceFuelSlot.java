@@ -1,17 +1,16 @@
 package com.craftminerd.handheld_utilities.menu.slot;
 
 import com.craftminerd.handheld_utilities.item.ModItems;
-import com.craftminerd.handheld_utilities.menu.HandheldFurnaceMenu;
+import com.craftminerd.handheld_utilities.menu.AbstractHandheldFurnaceMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class HandheldFurnaceFuelSlot extends SlotItemHandler {
-    private final HandheldFurnaceMenu menu;
+    private final AbstractHandheldFurnaceMenu menu;
 
-    public HandheldFurnaceFuelSlot(HandheldFurnaceMenu menu, IItemHandler handler, int pSlot, int pX, int pY) {
+    public HandheldFurnaceFuelSlot(AbstractHandheldFurnaceMenu menu, IItemHandler handler, int pSlot, int pX, int pY) {
         super(handler, pSlot, pX, pY);
         this.menu = menu;
     }

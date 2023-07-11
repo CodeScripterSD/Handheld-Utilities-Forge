@@ -2,7 +2,12 @@ package com.craftminerd.handheld_utilities.integration;
 
 import com.craftminerd.handheld_utilities.HandheldUtilities;
 import com.craftminerd.handheld_utilities.item.ModItems;
-import com.craftminerd.handheld_utilities.menu.HandheldFurnaceScreen;
+import com.craftminerd.handheld_utilities.menu.HandheldBlastFurnaceMenu;
+import com.craftminerd.handheld_utilities.menu.HandheldFurnaceMenu;
+import com.craftminerd.handheld_utilities.menu.HandheldSmokerMenu;
+import com.craftminerd.handheld_utilities.screen.HandheldBlastFurnaceScreen;
+import com.craftminerd.handheld_utilities.screen.HandheldFurnaceScreen;
+import com.craftminerd.handheld_utilities.screen.HandheldSmokerScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -10,7 +15,6 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.FurnaceMenu;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -25,18 +29,27 @@ public class JEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ModItems.HANDHELD_SMITHING.get().getDefaultInstance(), RecipeTypes.SMITHING);
         registration.addRecipeCatalyst(ModItems.HANDHELD_STONECUTTER.get().getDefaultInstance(), RecipeTypes.STONECUTTING);
         registration.addRecipeCatalyst(ModItems.HANDHELD_ANVIL.get().getDefaultInstance(), RecipeTypes.ANVIL);
+
         registration.addRecipeCatalyst(ModItems.HANDHELD_FURNACE.get().getDefaultInstance(), RecipeTypes.SMELTING, RecipeTypes.FUELING);
-//        IModPlugin.super.registerRecipeCatalysts(registration);
+        registration.addRecipeCatalyst(ModItems.HANDHELD_BLAST_FURNACE.get().getDefaultInstance(), RecipeTypes.BLASTING, RecipeTypes.FUELING);
+        registration.addRecipeCatalyst(ModItems.HANDHELD_SMOKER.get().getDefaultInstance(), RecipeTypes.SMOKING, RecipeTypes.FUELING);
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(HandheldFurnaceScreen.class, 78, 32, 28, 23, RecipeTypes.SMELTING, RecipeTypes.FUELING);
+        registration.addRecipeClickArea(HandheldBlastFurnaceScreen.class, 78, 32, 28, 23, RecipeTypes.BLASTING, RecipeTypes.FUELING);
+        registration.addRecipeClickArea(HandheldSmokerScreen.class, 78, 32, 28, 23, RecipeTypes.SMOKING, RecipeTypes.FUELING);
     }
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(FurnaceMenu.class, RecipeTypes.SMELTING, 0, 1, 3, 36);
-        registration.addRecipeTransferHandler(FurnaceMenu.class, RecipeTypes.FUELING, 1, 1, 3, 36);
+        registration.addRecipeTransferHandler(HandheldFurnaceMenu.class, RecipeTypes.FUELING, 1, 1, 3, 36);
+        registration.addRecipeTransferHandler(HandheldBlastFurnaceMenu.class, RecipeTypes.FUELING, 1, 1, 3, 36);
+        registration.addRecipeTransferHandler(HandheldSmokerMenu.class, RecipeTypes.FUELING, 1, 1, 3, 36);
+
+        registration.addRecipeTransferHandler(HandheldFurnaceMenu.class, RecipeTypes.SMELTING, 0, 1, 3, 36);
+        registration.addRecipeTransferHandler(HandheldBlastFurnaceMenu.class, RecipeTypes.BLASTING, 0, 1, 3, 36);
+        registration.addRecipeTransferHandler(HandheldSmokerMenu.class, RecipeTypes.SMOKING, 0, 1, 3, 36);
     }
 }

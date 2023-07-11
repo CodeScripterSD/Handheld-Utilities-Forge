@@ -1,5 +1,6 @@
-package com.craftminerd.handheld_utilities.menu;
+package com.craftminerd.handheld_utilities.screen;
 
+import com.craftminerd.handheld_utilities.menu.HandheldStorageMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

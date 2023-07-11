@@ -1,6 +1,6 @@
 package com.craftminerd.handheld_utilities.menu;
 
-import com.craftminerd.handheld_utilities.item.custom.HandheldFurnace;
+import com.craftminerd.handheld_utilities.item.custom.HandheldBlastFurnace;
 import com.craftminerd.handheld_utilities.item.custom.HandheldSmoker;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,13 +10,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.items.IItemHandler;
 
-public class HandheldFurnaceMenu extends AbstractHandheldFurnaceMenu{
-    public HandheldFurnaceMenu(int pContainerId, Inventory pPlayerInventory, FriendlyByteBuf buf) {
-        super(ModMenuTypes.HANDHELD_FURNACE.get(), RecipeType.SMELTING, pContainerId, pPlayerInventory);
+public class HandheldBlastFurnaceMenu extends AbstractHandheldFurnaceMenu {
+    public HandheldBlastFurnaceMenu(int pContainerId, Inventory pPlayerInventory, FriendlyByteBuf buf) {
+        super(ModMenuTypes.HANDHELD_BLAST_FURNACE.get(), RecipeType.BLASTING, pContainerId, pPlayerInventory);
     }
 
-    public HandheldFurnaceMenu(int pContainerId, Inventory pPlayerInventory, IItemHandler itemHandler, ContainerData pBlastFurnaceData) {
-        super(ModMenuTypes.HANDHELD_FURNACE.get(), RecipeType.SMELTING, pContainerId, pPlayerInventory, itemHandler, pBlastFurnaceData);
+    public HandheldBlastFurnaceMenu(int pContainerId, Inventory pPlayerInventory, IItemHandler handler, ContainerData pData) {
+        super(ModMenuTypes.HANDHELD_BLAST_FURNACE.get(), RecipeType.BLASTING, pContainerId, pPlayerInventory, handler, pData);
     }
 
     /**
@@ -28,16 +28,16 @@ public class HandheldFurnaceMenu extends AbstractHandheldFurnaceMenu{
 
     private static ItemStack getHeldItem(Player player) {
         // Determine which held item is a handheld storage (if either)
-        if (isHandheldFurnace(player.getMainHandItem())) {
+        if (isHandheldBlastFurnace(player.getMainHandItem())) {
             return player.getMainHandItem();
         }
-        if (isHandheldFurnace(player.getOffhandItem())) {
+        if (isHandheldBlastFurnace(player.getOffhandItem())) {
             return player.getOffhandItem();
         }
         return ItemStack.EMPTY;
     }
 
-    private static boolean isHandheldFurnace(ItemStack stack) {
-        return stack.getItem() instanceof HandheldFurnace;
+    private static boolean isHandheldBlastFurnace(ItemStack stack) {
+        return stack.getItem() instanceof HandheldBlastFurnace;
     }
 }

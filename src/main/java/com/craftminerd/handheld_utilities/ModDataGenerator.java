@@ -178,6 +178,30 @@ public class ModDataGenerator {
                                     ::save
                     )
                     .build(pFinishedRecipeConsumer, new ResourceLocation(HandheldUtilities.MOD_ID, "handheld_furnace"));
+
+            ConditionalRecipe.builder()
+                    .addCondition(
+                            new ModConfigCondition(ModCommonConfigs.ENABLE_HANDHELD_BLAST_FURNACE_RECIPE)
+                    )
+                    .addRecipe(
+                            ShapelessRecipeBuilder.shapeless(ModItems.HANDHELD_BLAST_FURNACE.get(), 1)
+                                    .requires(Items.BLAST_FURNACE.asItem())
+                                    .unlockedBy("has_blast_furnace", has(Items.BLAST_FURNACE.asItem()))
+                                    ::save
+                    )
+                    .build(pFinishedRecipeConsumer, new ResourceLocation(HandheldUtilities.MOD_ID, "handheld_blast_furnace"));
+
+            ConditionalRecipe.builder()
+                    .addCondition(
+                            new ModConfigCondition(ModCommonConfigs.ENABLE_HANDHELD_SMOKER_RECIPE)
+                    )
+                    .addRecipe(
+                            ShapelessRecipeBuilder.shapeless(ModItems.HANDHELD_SMOKER.get(), 1)
+                                    .requires(Items.SMOKER.asItem())
+                                    .unlockedBy("has_smoker", has(Items.SMOKER.asItem()))
+                                    ::save
+                    )
+                    .build(pFinishedRecipeConsumer, new ResourceLocation(HandheldUtilities.MOD_ID, "handheld_smoker"));
         }
     }
 }

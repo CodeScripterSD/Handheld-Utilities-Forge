@@ -1,5 +1,6 @@
 package com.craftminerd.handheld_utilities.item.custom;
 
+import com.craftminerd.handheld_utilities.menu.HandheldBlastFurnaceMenu;
 import com.craftminerd.handheld_utilities.menu.HandheldFurnaceMenu;
 import com.craftminerd.handheld_utilities.util.HandheldFurnaceData;
 import com.craftminerd.handheld_utilities.util.HandheldFurnaceItemHandler;
@@ -17,8 +18,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 
-public class HandheldFurnace extends HandheldFurnaceItem {
-    public HandheldFurnace(Properties pProperties) {
+public class HandheldBlastFurnace extends HandheldFurnaceItem {
+    public HandheldBlastFurnace(Properties pProperties) {
         super(pProperties);
     }
 
@@ -28,8 +29,8 @@ public class HandheldFurnace extends HandheldFurnaceItem {
             ItemStack handheld_furnace = pPlayer.getItemInHand(pUsedHand);
             HandheldFurnaceData data = HandheldFurnaceItem.getData(handheld_furnace);
 
-            NetworkHooks.openGui(((ServerPlayer) pPlayer), new SimpleMenuProvider( (windowId, playerInventory, playerEntity) ->
-                    new HandheldFurnaceMenu(windowId, playerInventory, data.getHandler(), data.getData()), handheld_furnace.getHoverName()));
+            NetworkHooks.openGui(((ServerPlayer) pPlayer), new SimpleMenuProvider((windowId, playerInventory, playerEntity) ->
+                    new HandheldBlastFurnaceMenu(windowId, playerInventory, data.getHandler(), data.getData()), handheld_furnace.getHoverName()));
 
             pPlayer.awardStat(Stats.INTERACT_WITH_FURNACE);
             return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
@@ -49,16 +50,16 @@ public class HandheldFurnace extends HandheldFurnaceItem {
 
         ItemStack itemstack = itemHandler.getStackInSlot(1);
         if (data.isLit() || (!itemstack.isEmpty() && !itemHandler.getStackInSlot(0).isEmpty())) {
-            data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.SMELTING, itemHandler));
+            data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.BLASTING, itemHandler));
             HandheldFurnaceManager.get().setDirty();
             SimpleContainer inv = new SimpleContainer(3);
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 inv.setItem(i, itemHandler.getStackInSlot(i));
             }
-            Recipe<?> recipe = pLevel.getRecipeManager().getRecipeFor(RecipeType.SMELTING, inv, pLevel).orElse(null);
+            Recipe<?> recipe = pLevel.getRecipeManager().getRecipeFor(RecipeType.BLASTING, inv, pLevel).orElse(null);
             int i = 64;
             if (!data.isLit() && data.canBurn(recipe, itemHandler, i)) {
-                data.getStoredData().set(0, data.getBurnDuration(itemstack));
+                data.getStoredData().set(0, data.getBurnDuration(itemstack) / 2);
                 data.getStoredData().set(1, data.getStoredData().get(0));
                 HandheldFurnaceManager.get().setDirty();
                 if (data.isLit()) {
@@ -75,11 +76,11 @@ public class HandheldFurnace extends HandheldFurnaceItem {
             }
 
             if (data.isLit() && data.canBurn(recipe, itemHandler, i)) {
-                data.getStoredData().set(2, data.getStoredData().get(2)+1);
+                data.getStoredData().set(2, data.getStoredData().get(2) + 1);
                 HandheldFurnaceManager.get().setDirty();
                 if (data.getStoredData().get(3) != 0 && data.getStoredData().get(2).equals(data.getStoredData().get(3))) {
                     data.getStoredData().set(2, 0);
-                    data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.SMELTING, itemHandler));
+                    data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.BLASTING, itemHandler));
                     HandheldFurnaceManager.get().setDirty();
                     if (data.burn(recipe, itemHandler, i)) {
 
