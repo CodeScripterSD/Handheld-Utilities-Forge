@@ -1,6 +1,7 @@
 package com.craftminerd.handheld_utilities.integration;
 
 import com.craftminerd.handheld_utilities.HandheldUtilities;
+import com.craftminerd.handheld_utilities.config.ModCommonConfigs;
 import com.craftminerd.handheld_utilities.item.ModItems;
 import com.craftminerd.handheld_utilities.menu.HandheldBlastFurnaceMenu;
 import com.craftminerd.handheld_utilities.menu.HandheldFurnaceMenu;
@@ -11,10 +12,16 @@ import com.craftminerd.handheld_utilities.screen.HandheldSmokerScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.Collection;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -33,6 +40,11 @@ public class JEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(ModItems.HANDHELD_FURNACE.get().getDefaultInstance(), RecipeTypes.SMELTING, RecipeTypes.FUELING);
         registration.addRecipeCatalyst(ModItems.HANDHELD_BLAST_FURNACE.get().getDefaultInstance(), RecipeTypes.BLASTING, RecipeTypes.FUELING);
         registration.addRecipeCatalyst(ModItems.HANDHELD_SMOKER.get().getDefaultInstance(), RecipeTypes.SMOKING, RecipeTypes.FUELING);
+    }
+
+    @Override
+    public void registerRecipes(IRecipeRegistration registration) {
+        registration.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, ModCommonConfigs.getDisabledItems());
     }
 
     @Override
