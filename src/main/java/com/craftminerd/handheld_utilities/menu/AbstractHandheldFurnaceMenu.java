@@ -165,18 +165,12 @@ public abstract class AbstractHandheldFurnaceMenu extends AbstractContainerMenu 
         }
         if(!filtered(slotId, this.getCarried().getItem()))
             return false;
-
+        Inventory inventory = player.getInventory();
         // Hotbar swapping via number keys
         if (clickType == ClickType.SWAP) {
-            int hotbarId = handler.getSlots() + 27 + button;
-            // Block swapping with container
-
-            Slot hotbarSlot = getSlot(hotbarId);
-            if (slotId <= handler.getSlots() - 1) {
-                return !isBlockedItem(slot.getItem()) && !isBlockedItem(hotbarSlot.getItem()) && filtered(slotId, hotbarSlot.getItem().getItem());
-            }
+            ItemStack itemstack4 = inventory.getItem(button);
+            return !isBlockedItem(itemstack4);
         }
-
         return true;
     }
 

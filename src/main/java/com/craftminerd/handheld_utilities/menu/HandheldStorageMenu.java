@@ -1,6 +1,7 @@
 package com.craftminerd.handheld_utilities.menu;
 
 import com.craftminerd.handheld_utilities.item.custom.HandheldStorageItem;
+import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 public class HandheldStorageMenu extends AbstractContainerMenu {
     private final IItemHandler itemHandler;
@@ -75,51 +77,28 @@ public class HandheldStorageMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
-        // This method handles shift-clicking to transfer items quickly. This can easily crash the game if not coded
-        // correctly. The first slots (index 0 to whatever) are usually the inventory block/item, while player slots
-        // start after those.
-        Slot slot = this.getSlot(index);
-
-        if (!slot.mayPickup(playerIn)) {
-            return slot.getItem();
-        }
-
-        if (index == blocked || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        //Filtering what's allowed in the storage, see also far below at line 192
-        if(!(slot.getItem().getItem() instanceof Item)) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack stack = slot.getItem();
-        ItemStack newStack = stack.copy();
-        int containerSlots = itemHandler.getSlots();
-        if (index < containerSlots) {
-            if (!this.moveItemStackTo(stack, containerSlots, this.slots.size(), true)) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            if (isHandheldStorage(itemstack1)) return ItemStack.EMPTY;
+            itemstack = itemstack1.copy();
+            if (index < this.rows * 9) {
+                if (!this.moveItemStackTo(itemstack1, this.rows * 9, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.rows * 9, false)) {
                 return ItemStack.EMPTY;
             }
-            slot.setChanged();
 
-            //Filtering what's allowed in the storage, see also far below at line 192
-        } else if(stack.getItem() instanceof Item) {
-            if (!this.moveItemStackTo(stack, 0, rows*9, false)) {
-                return ItemStack.EMPTY;
+            if (itemstack1.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
             }
         }
-        if (!this.moveItemStackTo(stack, 0, rows*9, false)) {
-            return ItemStack.EMPTY;
-        }
 
-
-        if (stack.isEmpty()) {
-            slot.set(ItemStack.EMPTY);
-        } else {
-            slot.setChanged();
-        }
-
-        slot.onTake(playerIn, newStack);
-        return newStack;
+        return itemstack;
     }
 
     @Override
@@ -147,21 +126,12 @@ public class HandheldStorageMenu extends AbstractContainerMenu {
         }
         if(!filtered(slotId, this.getCarried().getItem()))
             return false;
-
+        Inventory inventory = player.getInventory();
         // Hotbar swapping via number keys
         if (clickType == ClickType.SWAP) {
-            int hotbarId = itemHandler.getSlots() + 27 + button;
-            // Block swapping with container
-            if (blocked == hotbarId) {
-                return false;
-            }
-
-            Slot hotbarSlot = getSlot(hotbarId);
-            if (slotId <= itemHandler.getSlots() - 1) {
-                return !isHandheldStorage(slot.getItem()) && !isHandheldStorage(hotbarSlot.getItem()) && filtered(slotId, hotbarSlot.getItem().getItem());
-            }
+            ItemStack itemstack4 = inventory.getItem(button);
+            return !isHandheldStorage(itemstack4);
         }
-
         return true;
     }
 
