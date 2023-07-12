@@ -126,6 +126,7 @@ public class HandheldStorageMenu extends AbstractContainerMenu {
         }
         if(!filtered(slotId, this.getCarried().getItem()))
             return false;
+        if (slotId > itemHandler.getSlots()) return true;
         Inventory inventory = player.getInventory();
         // Hotbar swapping via number keys
         if (clickType == ClickType.SWAP) {

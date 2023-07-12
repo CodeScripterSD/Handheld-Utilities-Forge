@@ -13,11 +13,11 @@ import net.minecraftforge.items.IItemHandler;
 
 public class HandheldSmokerMenu extends AbstractHandheldFurnaceMenu {
     public HandheldSmokerMenu(int pContainerId, Inventory pPlayerInventory, FriendlyByteBuf buf) {
-        super(ModMenuTypes.HANDHELD_SMOKER.get(), RecipeType.BLASTING, pContainerId, pPlayerInventory);
+        super(ModMenuTypes.HANDHELD_SMOKER.get(), RecipeType.SMOKING, pContainerId, pPlayerInventory);
     }
 
     public HandheldSmokerMenu(int pContainerId, Inventory pPlayerInventory, IItemHandler handler, ContainerData pData) {
-        super(ModMenuTypes.HANDHELD_SMOKER.get(), RecipeType.BLASTING, pContainerId, pPlayerInventory, handler, pData);
+        super(ModMenuTypes.HANDHELD_SMOKER.get(), RecipeType.SMOKING, pContainerId, pPlayerInventory, handler, pData);
     }
 
     /**

@@ -29,7 +29,7 @@ displayName="craftminerD's Handheld Utilities" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="craftminerD" #optional
+credits="The main programming behind the Handheld Chest and Handheld Furnace variants comes from https://gitlab.com/LaDestitute/beware-the-dark/-/tree/unstable-1.18" #optional
 # A text field displayed in the mod UI
 authors="craftminerD" #optional
 # The description text for the mod (multi line!) (#mandatory)

@@ -16,6 +16,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractHandheldFurnaceMenu extends AbstractContainerMenu {
     public static final int INGREDIENT_SLOT = 0;
@@ -33,7 +34,12 @@ public abstract class AbstractHandheldFurnaceMenu extends AbstractContainerMenu 
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     public AbstractHandheldFurnaceMenu(MenuType<?> menuType, RecipeType<? extends AbstractCookingRecipe> recipeType, int pContainerId, Inventory pPlayerInventory) {
-        this(menuType, recipeType, pContainerId, pPlayerInventory, new ItemStackHandler(3), new SimpleContainerData(4));
+        this(menuType, recipeType, pContainerId, pPlayerInventory, new ItemStackHandler(3) {
+            @Override
+            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+                return !(stack.getItem() instanceof HandheldFurnaceItem) && !(stack.getItem() instanceof HandheldStorageItem);
+            }
+        }, new SimpleContainerData(4));
     }
 
     public AbstractHandheldFurnaceMenu(MenuType<?> menuType, RecipeType<? extends AbstractCookingRecipe> recipeType, int pContainerId, Inventory pPlayerInventory, IItemHandler handler, ContainerData pData) {
@@ -165,11 +171,12 @@ public abstract class AbstractHandheldFurnaceMenu extends AbstractContainerMenu 
         }
         if(!filtered(slotId, this.getCarried().getItem()))
             return false;
+        if (slotId > handler.getSlots()) return true;
         Inventory inventory = player.getInventory();
-        // Hotbar swapping via number keys
+        // Hotbar swapping via number keys or offhand swap
         if (clickType == ClickType.SWAP) {
-            ItemStack itemstack4 = inventory.getItem(button);
-            return !isBlockedItem(itemstack4);
+            ItemStack itemStack = inventory.getItem(button);
+            return !isBlockedItem(itemStack);
         }
         return true;
     }

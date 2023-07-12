@@ -1,7 +1,6 @@
 package com.craftminerd.handheld_utilities.menu;
 
 import com.craftminerd.handheld_utilities.item.custom.HandheldFurnace;
-import com.craftminerd.handheld_utilities.item.custom.HandheldSmoker;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
