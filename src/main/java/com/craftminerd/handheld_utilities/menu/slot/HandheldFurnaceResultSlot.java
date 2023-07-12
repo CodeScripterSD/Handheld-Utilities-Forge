@@ -1,5 +1,7 @@
 package com.craftminerd.handheld_utilities.menu.slot;
 
+import com.craftminerd.handheld_utilities.menu.AbstractHandheldFurnaceMenu;
+import com.craftminerd.handheld_utilities.util.HandheldFurnaceData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -53,8 +55,8 @@ public class HandheldFurnaceResultSlot extends SlotItemHandler {
      */
     protected void checkTakeAchievements(ItemStack pStack) {
         pStack.onCraftedBy(this.player.level, this.player, this.removeCount);
-        if (this.player instanceof ServerPlayer && this.container instanceof AbstractFurnaceBlockEntity) {
-//            ((AbstractFurnaceBlockEntity)this.container).awardUsedRecipesAndPopExperience((ServerPlayer)this.player);
+        if (this.player instanceof ServerPlayer) {
+            HandheldFurnaceData.awardUsedRecipesAndPopExperience((ServerPlayer)this.player);
         }
 
         this.removeCount = 0;

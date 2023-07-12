@@ -1,9 +1,19 @@
 package com.craftminerd.handheld_utilities.util;
 
+import com.craftminerd.handheld_utilities.item.custom.HandheldFurnaceItem;
+import com.craftminerd.handheld_utilities.item.custom.HandheldStorageItem;
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,14 +21,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +40,63 @@ public class HandheldFurnaceData {
     private final LazyOptional<IItemHandler> optional;
     private final ContainerData data;
     private final NonNullList<Integer> storedData = NonNullList.withSize(4, 0);
+    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
     public final Metadata meta = new Metadata();
+
+    public void setRecipeUsed(@Nullable Recipe<?> pRecipe) {
+        if (pRecipe != null) {
+            ResourceLocation resourcelocation = pRecipe.getId();
+            this.recipesUsed.addTo(resourcelocation, 1);
+        }
+
+    }
+
+    private static ItemStack getHeldItem(Player player) {
+        // Determine which held item is a handheld storage (if either)
+        if (isHandheldFurnace(player.getMainHandItem())) {
+            return player.getMainHandItem();
+        }
+        if (isHandheldFurnace(player.getOffhandItem())) {
+            return player.getOffhandItem();
+        }
+        return ItemStack.EMPTY;
+    }
+
+    private static boolean isHandheldFurnace(ItemStack stack) {
+        return stack.getItem() instanceof HandheldFurnaceItem;
+    }
+
+    public static void awardUsedRecipesAndPopExperience(ServerPlayer player) {
+        ItemStack heldItem = getHeldItem(player);
+        if (heldItem.isEmpty()) return;
+        HandheldFurnaceData data = HandheldFurnaceItem.getData(heldItem);
+        List<Recipe<?>> list = data.getRecipesToAwardAndPopExperience(player.getLevel(), player.position(), data);
+        player.awardRecipes(list);
+        data.recipesUsed.clear();
+    }
+
+    public List<Recipe<?>> getRecipesToAwardAndPopExperience(ServerLevel pLevel, Vec3 pPopVec, HandheldFurnaceData data) {
+        List<Recipe<?>> list = Lists.newArrayList();
+
+        for(Object2IntMap.Entry<ResourceLocation> entry : data.recipesUsed.object2IntEntrySet()) {
+            pLevel.getRecipeManager().byKey(entry.getKey()).ifPresent((p_155023_) -> {
+                list.add(p_155023_);
+                createExperience(pLevel, pPopVec, entry.getIntValue(), ((AbstractCookingRecipe)p_155023_).getExperience());
+            });
+        }
+
+        return list;
+    }
+
+    private static void createExperience(ServerLevel pLevel, Vec3 pPopVec, int pRecipeIndex, float pExperience) {
+        int i = Mth.floor((float)pRecipeIndex * pExperience);
+        float f = Mth.frac((float)pRecipeIndex * pExperience);
+        if (f != 0.0F && Math.random() < (double)f) {
+            ++i;
+        }
+
+        ExperienceOrb.award(pLevel, pPopVec, i);
+    }
 
     public boolean isLit() {
         return storedData.get(0) > 0;
@@ -100,6 +168,10 @@ public class HandheldFurnaceData {
         storedData.set(1, stored_data.getInt("litDuration"));
         storedData.set(2, stored_data.getInt("cookingProgress"));
         storedData.set(3, stored_data.getInt("cookingTotalTime"));
+        CompoundTag recipesUsed = incomingNBT.getCompound("RecipesUsed");
+        for (String s : recipesUsed.getAllKeys()) {
+            this.recipesUsed.put(new ResourceLocation(s), recipesUsed.getInt(s));
+        }
         this.data = new ContainerData() {
             @Override
             public int get(int pIndex) {
@@ -145,6 +217,12 @@ public class HandheldFurnaceData {
         stored_data.putInt("litDuration", storedData.get(1));
         stored_data.putInt("cookingProgress", storedData.get(2));
         stored_data.putInt("cookingTotalTime", storedData.get(3));
+
+        CompoundTag recipesUsed = new CompoundTag();
+        this.recipesUsed.forEach((recipeLocation, amount) -> {
+            recipesUsed.putInt(recipeLocation.toString(), amount);
+        });
+        nbt.put("RecipesUsed", recipesUsed);
 
         nbt.put("stored_data", stored_data);
 
@@ -213,6 +291,8 @@ public class HandheldFurnaceData {
             return ForgeHooks.getBurnTime(itemstack, RecipeType.SMELTING);
         }
     }
+
+
 
     public static class Metadata implements INBTSerializable<CompoundTag> {
         private String firstAccessedPlayer = "";

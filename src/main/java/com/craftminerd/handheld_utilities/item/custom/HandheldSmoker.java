@@ -83,7 +83,8 @@ public class HandheldSmoker extends HandheldFurnaceItem {
                     data.getStoredData().set(3, data.getTotalCookTime(pLevel, RecipeType.SMOKING, itemHandler));
                     HandheldFurnaceManager.get().setDirty();
                     if (data.burn(recipe, itemHandler, i)) {
-
+                        data.setRecipeUsed(recipe);
+                        HandheldFurnaceManager.get().setDirty();
                     }
                 }
             } else {
