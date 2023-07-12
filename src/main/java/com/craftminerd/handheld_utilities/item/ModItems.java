@@ -34,10 +34,10 @@ public class ModItems {
             .tab(HandheldUtilities.UTILITIES_TAB).stacksTo(1).defaultDurability(1)));
 
     public static final RegistryObject<Item> HANDHELD_FURNACE = ITEMS.register("handheld_furnace", () -> new HandheldFurnace(new Item.Properties()
-            .tab(HandheldUtilities.UTILITIES_TAB)));
+            .tab(HandheldUtilities.UTILITIES_TAB).stacksTo(1)));
     public static final RegistryObject<Item> HANDHELD_BLAST_FURNACE = ITEMS.register("handheld_blast_furnace", () -> new HandheldBlastFurnace(new Item.Properties()
-            .tab(HandheldUtilities.UTILITIES_TAB)));
+            .tab(HandheldUtilities.UTILITIES_TAB).stacksTo(1)));
     public static final RegistryObject<Item> HANDHELD_SMOKER = ITEMS.register("handheld_smoker", () -> new HandheldSmoker(new Item.Properties()
-            .tab(HandheldUtilities.UTILITIES_TAB)));
+            .tab(HandheldUtilities.UTILITIES_TAB).stacksTo(1)));
 
 }
