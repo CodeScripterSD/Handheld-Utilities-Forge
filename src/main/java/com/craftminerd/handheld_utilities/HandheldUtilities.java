@@ -3,6 +3,7 @@ package com.craftminerd.handheld_utilities;
 import com.craftminerd.handheld_utilities.config.ModCommonConfigs;
 import com.craftminerd.handheld_utilities.item.ModItems;
 import com.craftminerd.handheld_utilities.menu.ModMenuTypes;
+import com.craftminerd.handheld_utilities.recipe.HandheldUtilitiesRecipes;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +39,7 @@ public class HandheldUtilities
 
         ModMenuTypes.MENUS.register(eventBus);
         ModItems.ITEMS.register(eventBus);
+        HandheldUtilitiesRecipes.register(eventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, "handheld_utilities-common.toml");
 

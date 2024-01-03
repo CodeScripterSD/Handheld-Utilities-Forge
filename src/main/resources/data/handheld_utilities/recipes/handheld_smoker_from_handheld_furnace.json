@@ -1,0 +1,19 @@
+{
+  "type": "handheld_utilities:handheld_furnace_upgrade",
+  "pattern": [
+    " L ",
+    "LFL",
+    " L "
+  ],
+  "key": {
+    "F": {
+      "item": "handheld_utilities:handheld_furnace"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "item": "handheld_utilities:handheld_smoker"
+  }
+}

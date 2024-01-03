@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "handheld_utilities:handheld_blast_furnace_from_handheld_furnace"
+    ]
+  },
+  "criteria": {
+    "has_handheld_furnace": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "handheld_utilities:handheld_furnace"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "handheld_utilities:handheld_blast_furnace_from_handheld_furnace"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_handheld_furnace",
+      "has_the_recipe"
+    ]
+  ]
+}

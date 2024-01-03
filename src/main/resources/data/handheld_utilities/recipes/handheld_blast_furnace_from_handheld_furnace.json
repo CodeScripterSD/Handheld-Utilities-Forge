@@ -1,0 +1,22 @@
+{
+  "type": "handheld_utilities:handheld_furnace_upgrade",
+  "pattern": [
+    "III",
+    "IFI",
+    "SSS"
+  ],
+  "key": {
+    "F": {
+      "item": "handheld_utilities:handheld_furnace"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "handheld_utilities:handheld_blast_furnace"
+  }
+}

@@ -6,11 +6,8 @@
         {
           "values": [
             {
-              "value": {
-                "config_true": "Items.Harder Recipes Enabled",
-                "type": "handheld_utilities:config_true"
-              },
-              "type": "forge:not"
+              "config_true": "Items.Harder Recipes Enabled",
+              "type": "handheld_utilities:config_true"
             },
             {
               "config_true": "Items.Handheld Anvil recipes enabled",
@@ -21,12 +18,26 @@
         }
       ],
       "recipe": {
-        "type": "minecraft:crafting_shapeless",
-        "ingredients": [
-          {
-            "item": "minecraft:anvil"
-          }
+        "type": "minecraft:crafting_shaped",
+        "pattern": [
+          "LPL",
+          "SCS",
+          "LPL"
         ],
+        "key": {
+          "C": {
+            "item": "minecraft:anvil"
+          },
+          "L": {
+            "item": "minecraft:leather"
+          },
+          "P": {
+            "item": "minecraft:paper"
+          },
+          "S": {
+            "item": "minecraft:string"
+          }
+        },
         "result": {
           "item": "handheld_utilities:handheld_anvil"
         }

@@ -55,6 +55,8 @@ public class ModCommonConfigs {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
+    public static final ForgeConfigSpec.BooleanValue ENABLE_HARD_RECIPES;
+
     public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_CRAFTER_RECIPE;
     public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_SMITHING_RECIPE;
     public static final ForgeConfigSpec.BooleanValue ENABLE_HANDHELD_STONECUTTER_RECIPE;
@@ -70,6 +72,8 @@ public class ModCommonConfigs {
 
     static {
         BUILDER.push("Items");
+
+        ENABLE_HARD_RECIPES = BUILDER.comment("Enable harder recipes for all items").define("Harder Recipes Enabled", false);
 
         ENABLE_HANDHELD_CRAFTER_RECIPE = BUILDER.comment("Enable the recipe for Handheld Crafting Table").define("Handheld Crafting Table recipe enabled", true);
         ENABLE_HANDHELD_SMITHING_RECIPE = BUILDER.comment("Enable the recipe for Handheld Smithing Table").define("Handheld Smithing Table recipe enabled", true);
