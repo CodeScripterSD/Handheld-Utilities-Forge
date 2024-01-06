@@ -32,6 +32,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -53,20 +54,57 @@ public class HandheldEnchantingTable extends Item {
         NetworkHooks.openGui((ServerPlayer) pPlayer, new SimpleMenuProvider((id, inventory, player) -> {
             Class<EnchantmentMenu> enchMenu = EnchantmentMenu.class;
             try {
-                Field enchantSlots = enchMenu.getDeclaredField("enchantSlots");
+                Field enchantSlots = null;
+                Field access = null;
+                Field random = null;
+                Field enchantmentSeed = null;
+                // I do all of this for loop stuff because im using mappings but when i run it in the base game the functions are unmapped and
+                // i felt this was easier than making a bunch of try/catch checking for the field names
+                for (Field enchMenuField : enchMenu.getDeclaredFields()) {
+                    if (enchMenuField.getType() == Container.class) {
+                        enchantSlots = enchMenuField;
+                    } else if (enchMenuField.getType() == ContainerLevelAccess.class) {
+                        access = enchMenuField;
+                    } else if (enchMenuField.getType() == Random.class) {
+                        random = enchMenuField;
+                    } else if (enchMenuField.getType() == DataSlot.class) {
+                        enchantmentSeed = enchMenuField;
+                    }
+                }
+                if (enchantSlots == null || access == null || random == null || enchantmentSeed == null) {
+                    return null;
+                }
+//                Field enchantSlots = enchMenu.getDeclaredField("enchantSlots");
                 enchantSlots.setAccessible(true);
 
-                Field access = enchMenu.getDeclaredField("access");
+//                Field access = enchMenu.getDeclaredField("access");
                 access.setAccessible(true);
 
-                Field random = enchMenu.getDeclaredField("random");
+//                Field random = enchMenu.getDeclaredField("random");
                 random.setAccessible(true);
 
-                Field enchantmentSeed = enchMenu.getDeclaredField("enchantmentSeed");
+//                Field enchantmentSeed = enchMenu.getDeclaredField("enchantmentSeed");
                 enchantmentSeed.setAccessible(true);
 
-                Method getEnchantmentList = enchMenu.getDeclaredMethod("getEnchantmentList", ItemStack.class, int.class, int.class);
+                Method getEnchantmentList = null;
+                for (Method enchMenuMethod : enchMenu.getDeclaredMethods()) {
+                    if (enchMenuMethod.getReturnType() == List.class) {
+                        getEnchantmentList = enchMenuMethod;
+                    }
+                }
+                if (getEnchantmentList == null) {
+                    return null;
+                }
+//                Method getEnchantmentList = enchMenu.getDeclaredMethod("getEnchantmentList", ItemStack.class, int.class, int.class);
+
                 getEnchantmentList.setAccessible(true);
+                // I have no idea what these are but my IDE told me to put them here and it errors without it so
+                Field finalEnchantSlots = enchantSlots;
+                Field finalAccess = access;
+                Field finalRandom = random;
+                Field finalEnchantmentSeed = enchantmentSeed;
+                Method finalGetEnchantmentList = getEnchantmentList;
+
                 return new EnchantmentMenu(id, inventory, ContainerLevelAccess.create(pLevel,
                         new BlockPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ()))) {
 
@@ -78,10 +116,10 @@ public class HandheldEnchantingTable extends Item {
                     @Override
                     public void slotsChanged(Container pInventory) {
                         try {
-                            if (pInventory == enchantSlots.get(this)) {
+                            if (pInventory == finalEnchantSlots.get(this)) {
                                 ItemStack itemstack = pInventory.getItem(0);
                                 if (!itemstack.isEmpty() && itemstack.isEnchantable()) {
-                                    ((ContainerLevelAccess) access.get(this)).execute((pLevel, pPos) -> {
+                                    ((ContainerLevelAccess) finalAccess.get(this)).execute((pLevel, pPos) -> {
                                         float j = getEnchantPowerFromItem(heldItem);
 
 //                                        for(BlockPos blockpos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
@@ -91,14 +129,14 @@ public class HandheldEnchantingTable extends Item {
 //                                        }
 
                                         try {
-                                            ((Random) random.get(this)).setSeed((long)((DataSlot) enchantmentSeed.get(this)).get());
+                                            ((Random) finalRandom.get(this)).setSeed((long)((DataSlot) finalEnchantmentSeed.get(this)).get());
                                         } catch (IllegalAccessException ex) {
                                             throw new RuntimeException(ex);
                                         }
 
                                         for(int k = 0; k < 3; ++k) {
                                             try {
-                                                this.costs[k] = EnchantmentHelper.getEnchantmentCost(((Random) random.get(this)), k, (int)j, itemstack);
+                                                this.costs[k] = EnchantmentHelper.getEnchantmentCost(((Random) finalRandom.get(this)), k, (int)j, itemstack);
                                             } catch (IllegalAccessException ex) {
                                                 throw new RuntimeException(ex);
                                             }
@@ -114,14 +152,14 @@ public class HandheldEnchantingTable extends Item {
                                             if (this.costs[l] > 0) {
                                                 List<EnchantmentInstance> list;
                                                 try {
-                                                    list = (List<EnchantmentInstance>) getEnchantmentList.invoke(this, itemstack, l, this.costs[l]);
+                                                    list = (List<EnchantmentInstance>) finalGetEnchantmentList.invoke(this, itemstack, l, this.costs[l]);
                                                 } catch (IllegalAccessException | InvocationTargetException ex) {
                                                     throw new RuntimeException(ex);
                                                 }
                                                 if (list != null && !list.isEmpty()) {
                                                     EnchantmentInstance enchantmentinstance = null;
                                                     try {
-                                                        enchantmentinstance = list.get(((Random) random.get(this)).nextInt(list.size()));
+                                                        enchantmentinstance = list.get(((Random) finalRandom.get(this)).nextInt(list.size()));
                                                     } catch (IllegalAccessException ex) {
                                                         throw new RuntimeException(ex);
                                                     }
