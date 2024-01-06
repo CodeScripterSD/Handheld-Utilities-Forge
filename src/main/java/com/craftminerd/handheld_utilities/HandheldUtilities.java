@@ -22,7 +22,7 @@ public class HandheldUtilities
 {
     public static final String MOD_ID = "handheld_utilities";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final CreativeModeTab UTILITIES_TAB = new CreativeModeTab(MOD_ID) {
         @Override

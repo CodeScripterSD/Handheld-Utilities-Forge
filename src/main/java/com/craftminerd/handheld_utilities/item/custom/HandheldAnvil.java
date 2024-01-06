@@ -34,8 +34,8 @@ public class HandheldAnvil extends Item {
             return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
         } else {
             Component component = new TranslatableComponent("container.repair");
-            if (!pPlayer.getItemInHand(pUsedHand).getDisplayName().equals(this.getDefaultInstance().getDisplayName())) {
-                component = pPlayer.getItemInHand(pUsedHand).getDisplayName();
+            if (!pPlayer.getItemInHand(pUsedHand).getHoverName().equals(this.getDefaultInstance().getHoverName())) {
+                component = pPlayer.getItemInHand(pUsedHand).getHoverName();
             }
             NetworkHooks.openGui((ServerPlayer) pPlayer, new SimpleMenuProvider((p_53124_, p_53125_, p_53126_)
                     -> new HandheldAnvilMenu(p_53124_, p_53125_, ContainerLevelAccess.create(pLevel,

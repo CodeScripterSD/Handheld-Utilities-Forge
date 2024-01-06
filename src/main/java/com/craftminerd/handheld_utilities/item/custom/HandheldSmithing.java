@@ -24,8 +24,8 @@ public class HandheldSmithing extends Item {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pLevel.isClientSide()) return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
         Component component = new TranslatableComponent("container.upgrade");
-        if (!pPlayer.getItemInHand(pUsedHand).getDisplayName().equals(this.getDefaultInstance().getDisplayName())) {
-            component = pPlayer.getItemInHand(pUsedHand).getDisplayName();
+        if (!pPlayer.getItemInHand(pUsedHand).getHoverName().equals(this.getDefaultInstance().getHoverName())) {
+            component = pPlayer.getItemInHand(pUsedHand).getHoverName();
         }
         NetworkHooks.openGui((ServerPlayer) pPlayer, new SimpleMenuProvider((id, inventory, player) -> {
             return new SmithingMenu(id, inventory, ContainerLevelAccess.create(pLevel,

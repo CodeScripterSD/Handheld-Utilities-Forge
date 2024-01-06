@@ -31,8 +31,8 @@ public class HandheldEnderChest extends HandheldStorageItem {
             return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
         } else {
             Component component = new TranslatableComponent("container.enderchest");
-            if (!pPlayer.getItemInHand(pUsedHand).getDisplayName().equals(this.getDefaultInstance().getDisplayName())) {
-                component = pPlayer.getItemInHand(pUsedHand).getDisplayName();
+            if (!pPlayer.getItemInHand(pUsedHand).getHoverName().equals(this.getDefaultInstance().getHoverName())) {
+                component = pPlayer.getItemInHand(pUsedHand).getHoverName();
             }
             pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), SoundEvents.ENDER_CHEST_OPEN, SoundSource.PLAYERS, (float) 0.5, 1);
             NetworkHooks.openGui((ServerPlayer) pPlayer, new SimpleMenuProvider((p_53124_, p_53125_, p_53126_)

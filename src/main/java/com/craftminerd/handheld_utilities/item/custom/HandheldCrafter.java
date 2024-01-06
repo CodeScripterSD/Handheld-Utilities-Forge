@@ -1,5 +1,6 @@
 package com.craftminerd.handheld_utilities.item.custom;
 
+import com.craftminerd.handheld_utilities.HandheldUtilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -24,8 +25,8 @@ public class HandheldCrafter extends Item {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pLevel.isClientSide()) return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
         Component component = new TranslatableComponent("container.crafting");
-        if (!pPlayer.getItemInHand(pUsedHand).getDisplayName().equals(this.getDefaultInstance().getDisplayName())) {
-            component = pPlayer.getItemInHand(pUsedHand).getDisplayName();
+        if (!pPlayer.getItemInHand(pUsedHand).getHoverName().equals(this.getDefaultInstance().getHoverName())) {
+            component = pPlayer.getItemInHand(pUsedHand).getHoverName();
         }
         NetworkHooks.openGui((ServerPlayer) pPlayer, new SimpleMenuProvider((id, inventory, player) -> {
             return new CraftingMenu(id, inventory, ContainerLevelAccess.create(pLevel,

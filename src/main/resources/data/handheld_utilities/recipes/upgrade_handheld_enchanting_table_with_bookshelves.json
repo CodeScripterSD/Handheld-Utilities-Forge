@@ -1,0 +1,9 @@
+{
+  "type": "handheld_utilities:handheld_enchanting_table_add_bookshelf",
+  "upgrading": {
+    "item": "handheld_utilities:handheld_etable"
+  },
+  "consuming": {
+    "item": "minecraft:bookshelf"
+  }
+}

@@ -1,6 +1,5 @@
 package com.craftminerd.handheld_utilities.recipe;
 
-import com.craftminerd.handheld_utilities.HandheldUtilities;
 import com.craftminerd.handheld_utilities.item.custom.HandheldFurnace;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
@@ -257,13 +256,7 @@ public class HandheldFurnaceUpgradeRecipe implements CraftingRecipe {
         }
     }
 
-    public static class Type implements RecipeType<HandheldFurnaceUpgradeRecipe> {
-        public Type() {}
-        public static final String ID = "handheld_furnace_upgrade";
-    }
-
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HandheldFurnaceUpgradeRecipe> {
-        private static final ResourceLocation NAME = new ResourceLocation(HandheldUtilities.MOD_ID, "handheld_furnace_upgrade");
         public HandheldFurnaceUpgradeRecipe fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
             Map<String, Ingredient> map = HandheldFurnaceUpgradeRecipe.keyFromJson(GsonHelper.getAsJsonObject(pJson, "key"));
             String[] astring = HandheldFurnaceUpgradeRecipe.shrink(HandheldFurnaceUpgradeRecipe.patternFromJson(GsonHelper.getAsJsonArray(pJson, "pattern")));
