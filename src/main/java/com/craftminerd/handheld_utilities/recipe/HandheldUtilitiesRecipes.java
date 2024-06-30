@@ -11,10 +11,10 @@ public class HandheldUtilitiesRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, HandheldUtilities.MOD_ID);
 
     public static final RegistryObject<RecipeSerializer<HandheldFurnaceUpgradeRecipe>> HANDHELD_FURNACE_UPGRADE_RECIPE_SERIALIZER = SERIALIZERS.register("handheld_furnace_upgrade",
-            HandheldFurnaceUpgradeRecipe.Serializer::new);
+            () -> HandheldFurnaceUpgradeRecipe.Serializer.INSTANCE);
 
     public static final RegistryObject<RecipeSerializer<HandheldEnchantingTableAddBookshelfRecipe>> HANDHELD_ENCHANTING_TABLE_ADD_BOOKSHELF_RECIPE_SERIALIZER = SERIALIZERS.register("handheld_enchanting_table_add_bookshelf",
-            HandheldEnchantingTableAddBookshelfRecipe.Serializer::new);
+            () -> HandheldEnchantingTableAddBookshelfRecipe.Serializer.INSTANCE);
 
     public static void register(IEventBus eventBus) { SERIALIZERS.register(eventBus); }
 }

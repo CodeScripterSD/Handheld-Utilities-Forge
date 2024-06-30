@@ -41,7 +41,7 @@ public class HandheldEnchantingTableAddBookshelfRecipe implements CraftingRecipe
     }
 
     public RecipeSerializer<?> getSerializer() {
-        return new HandheldEnchantingTableAddBookshelfRecipe.Serializer();
+        return Serializer.INSTANCE;
     }
 
     public String getGroup() {
@@ -112,6 +112,8 @@ public class HandheldEnchantingTableAddBookshelfRecipe implements CraftingRecipe
     }
 
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HandheldEnchantingTableAddBookshelfRecipe> {
+        public static final Serializer INSTANCE = new Serializer();
+
         private static final ResourceLocation NAME = new ResourceLocation(HandheldUtilities.MOD_ID, "handheld_enchanting_table_add_bookshelf");
         public HandheldEnchantingTableAddBookshelfRecipe fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
             String s = GsonHelper.getAsString(pJson, "group", "");
@@ -126,6 +128,7 @@ public class HandheldEnchantingTableAddBookshelfRecipe implements CraftingRecipe
                 return new HandheldEnchantingTableAddBookshelfRecipe(pRecipeId, s, toUpgrade, toConsume);
             }
         }
+
 
         public HandheldEnchantingTableAddBookshelfRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             String s = pBuffer.readUtf();

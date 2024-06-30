@@ -6,11 +6,11 @@
         {
           "values": [
             {
-              "config_true": "Items.Harder Recipes Enabled",
+              "value": "Items.Harder Recipes Enabled",
               "type": "handheld_utilities:config_true"
             },
             {
-              "config_true": "Items.Handheld Chest recipe enabled",
+              "value": "Items.Handheld Chest recipe enabled",
               "type": "handheld_utilities:config_true"
             }
           ],

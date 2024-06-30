@@ -26,8 +26,4 @@ public class ModEventBusSubscriber {
         MenuScreens.register(ModMenuTypes.HANDHELD_BLAST_FURNACE.get(), HandheldBlastFurnaceScreen::new);
         MenuScreens.register(ModMenuTypes.HANDHELD_SMOKER.get(), HandheldSmokerScreen::new);
     }
-    @SubscribeEvent
-    public static void registerSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        CraftingHelper.register(ModConfigCondition.Serializer.INSTANCE);
-    }
 }

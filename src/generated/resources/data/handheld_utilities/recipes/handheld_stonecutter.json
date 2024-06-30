@@ -7,13 +7,13 @@
           "values": [
             {
               "value": {
-                "config_true": "Items.Harder Recipes Enabled",
+                "value": "Items.Harder Recipes Enabled",
                 "type": "handheld_utilities:config_true"
               },
               "type": "forge:not"
             },
             {
-              "config_true": "Items.Handheld Stonecutter recipe enabled",
+              "value": "Items.Handheld Stonecutter recipe enabled",
               "type": "handheld_utilities:config_true"
             }
           ],

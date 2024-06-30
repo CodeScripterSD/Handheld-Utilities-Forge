@@ -1,5 +1,6 @@
 package com.craftminerd.handheld_utilities;
 
+import com.craftminerd.handheld_utilities.conditions.ModConfigCondition;
 import com.craftminerd.handheld_utilities.config.ModCommonConfigs;
 import com.craftminerd.handheld_utilities.item.ModItems;
 import com.craftminerd.handheld_utilities.menu.ModMenuTypes;
@@ -8,6 +9,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -49,6 +51,7 @@ public class HandheldUtilities
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        CraftingHelper.register(ModConfigCondition.Serializer.INSTANCE);
 //        // some preinit code
 //        LOGGER.info("HELLO FROM PREINIT");
 //        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());

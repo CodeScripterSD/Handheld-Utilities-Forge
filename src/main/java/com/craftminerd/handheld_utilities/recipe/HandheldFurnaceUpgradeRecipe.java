@@ -128,7 +128,7 @@ public class HandheldFurnaceUpgradeRecipe implements CraftingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return new HandheldFurnaceUpgradeRecipe.Serializer();
+        return Serializer.INSTANCE;
     }
 
     @Override
@@ -257,6 +257,9 @@ public class HandheldFurnaceUpgradeRecipe implements CraftingRecipe {
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HandheldFurnaceUpgradeRecipe> {
+        public static final Serializer INSTANCE = new Serializer();
+
+
         public HandheldFurnaceUpgradeRecipe fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
             Map<String, Ingredient> map = HandheldFurnaceUpgradeRecipe.keyFromJson(GsonHelper.getAsJsonObject(pJson, "key"));
             String[] astring = HandheldFurnaceUpgradeRecipe.shrink(HandheldFurnaceUpgradeRecipe.patternFromJson(GsonHelper.getAsJsonArray(pJson, "pattern")));
@@ -293,6 +296,7 @@ public class HandheldFurnaceUpgradeRecipe implements CraftingRecipe {
 //            pBuffer.writeItem(pRecipe.dataItem);
             pBuffer.writeItem(pRecipe.result);
         }
+
     }
 
 }

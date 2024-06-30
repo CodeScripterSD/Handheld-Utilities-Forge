@@ -2,17 +2,18 @@ package com.craftminerd.handheld_utilities.item.custom;
 
 import com.craftminerd.handheld_utilities.HandheldUtilities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
@@ -20,23 +21,23 @@ import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import static com.ibm.icu.text.PluralRules.Operand.e;
 
 public class HandheldEnchantingTable extends Item {
     public HandheldEnchantingTable(Properties pProperties) {
@@ -59,7 +60,7 @@ public class HandheldEnchantingTable extends Item {
                 Field random = null;
                 Field enchantmentSeed = null;
                 // I do all of this for loop stuff because im using mappings but when i run it in the base game the functions are unmapped and
-                // i felt this was easier than making a bunch of try/catch checking for the field names
+                // I felt this was easier than making a bunch of try/catch checking for the field names
                 for (Field enchMenuField : enchMenu.getDeclaredFields()) {
                     if (enchMenuField.getType() == Container.class) {
                         enchantSlots = enchMenuField;
@@ -74,16 +75,10 @@ public class HandheldEnchantingTable extends Item {
                 if (enchantSlots == null || access == null || random == null || enchantmentSeed == null) {
                     return null;
                 }
-//                Field enchantSlots = enchMenu.getDeclaredField("enchantSlots");
+
                 enchantSlots.setAccessible(true);
-
-//                Field access = enchMenu.getDeclaredField("access");
                 access.setAccessible(true);
-
-//                Field random = enchMenu.getDeclaredField("random");
                 random.setAccessible(true);
-
-//                Field enchantmentSeed = enchMenu.getDeclaredField("enchantmentSeed");
                 enchantmentSeed.setAccessible(true);
 
                 Method getEnchantmentList = null;
@@ -92,12 +87,13 @@ public class HandheldEnchantingTable extends Item {
                         getEnchantmentList = enchMenuMethod;
                     }
                 }
+
                 if (getEnchantmentList == null) {
                     return null;
                 }
-//                Method getEnchantmentList = enchMenu.getDeclaredMethod("getEnchantmentList", ItemStack.class, int.class, int.class);
 
                 getEnchantmentList.setAccessible(true);
+
                 // I have no idea what these are but my IDE told me to put them here and it errors without it so
                 Field finalEnchantSlots = enchantSlots;
                 Field finalAccess = access;
@@ -120,7 +116,12 @@ public class HandheldEnchantingTable extends Item {
                                 ItemStack itemstack = pInventory.getItem(0);
                                 if (!itemstack.isEmpty() && itemstack.isEnchantable()) {
                                     ((ContainerLevelAccess) finalAccess.get(this)).execute((pLevel, pPos) -> {
-                                        float j = getEnchantPowerFromItem(heldItem);
+                                        float j = 0;
+//                                        j = getEnchantPowerFromItem(heldItem);
+//                                        NonNullList<BlockState> states =  getBlockStatesOfAttachedItems(heldItem);
+//                                        for (BlockState state : states) {
+//                                            j += state.is(Blocks.BOOKSHELF) ? 1 : 0;
+//                                        }
 
 //                                        for(BlockPos blockpos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
 //                                            if (EnchantmentTableBlock.isValidBookShelf(pLevel, pPos, blockpos)) {
@@ -192,12 +193,39 @@ public class HandheldEnchantingTable extends Item {
         return InteractionResultHolder.consume(heldItem);
     }
 
+//    private NonNullList<BlockState> getBlockStatesOfAttachedItems(ItemStack stack) {
+//        NonNullList<BlockState> blockStates = NonNullList.create();
+//        CompoundTag nbt = stack.getTag();
+//        if (nbt == null || !nbt.contains("shelfBlocks")) return blockStates;
+//        HandheldUtilities.LOGGER.info("Full NBT: " + nbt);
+//        CompoundTag shelfBlocks = nbt.getCompound("shelfBlocks");
+//        HandheldUtilities.LOGGER.info("NBT of shelfBlocks: " + shelfBlocks);
+//        for (String key : shelfBlocks.getAllKeys()) {
+//            HandheldUtilities.LOGGER.info("Inner Key (" + key + ") of NBT: " + shelfBlocks.get(key));
+//            if (ForgeRegistries.BLOCKS.containsKey(new ResourceLocation(shelfBlocks.getString(key)))) {
+//                Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(shelfBlocks.getString(key)));
+//                assert block != null;
+//                blockStates.add(block.defaultBlockState());
+//            }
+//        }
+//        return blockStates;
+//    }
+
     public int getEnchantPowerFromItem(ItemStack stack) {
         CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("enchantPower")) {
             return nbt.getInt("enchantPower");
         }
         return 0;
+//        int enchantPower = 0;
+//        CompoundTag nbt = stack.getTag();
+//        if (nbt == null || !nbt.contains("shelfBlocks")) return 0;
+//        HandheldUtilities.LOGGER.info("Full NBT: " + nbt);
+//        CompoundTag shelfBlocks = nbt.getCompound("shelfBlocks");
+//        HandheldUtilities.LOGGER.info("NBT of shelfBlocks: " + shelfBlocks);
+//        for (String key : shelfBlocks.getAllKeys()) {
+//            HandheldUtilities.LOGGER.info("Inner Key (" + key + ") of NBT: " + shelfBlocks.get(key));
+//        }
     }
 
     @Override

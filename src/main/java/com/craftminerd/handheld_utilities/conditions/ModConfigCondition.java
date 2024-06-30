@@ -40,12 +40,12 @@ public class ModConfigCondition implements ICondition {
                 pathString = pathString.concat(configPath.get(i));
                 if (i < configPath.size() - 1) pathString = pathString.concat(".");
             }
-            json.addProperty("config_true", pathString);
+            json.addProperty("value", pathString);
         }
 
         @Override
         public ModConfigCondition read(JsonObject json) {
-            String pathString = GsonHelper.getAsString(json, "config_true");
+            String pathString = GsonHelper.getAsString(json, "value");
             ForgeConfigSpec.BooleanValue configBool = ModCommonConfigs.SPEC.getValues().get(pathString);
 
             return new ModConfigCondition(configBool);
